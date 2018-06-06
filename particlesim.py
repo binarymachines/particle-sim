@@ -13,7 +13,7 @@ import docopt
 
 
 ParticleState = namedtuple('ParticleState', 'position speed direction')
-state_rx = re.compile(r'[LR.]+$')
+state_string_rx = re.compile(r'[LR.]+$')
 
 
 class Animation(object):
@@ -60,6 +60,7 @@ class Animation(object):
     def run_simulation(self, state_vector, chamber_size):
         '''Perform the core animation logic, using a Pythonic generator.
         This is desirable in cases where the potential number of simulation states per run is very large.
+        #YOLO (You Oughta use Lazy Operators)
         '''
         current_state_vector = state_vector
         while True:
@@ -98,7 +99,7 @@ class Animation(object):
         if len(initial_state_string) > 50:
             raise Exception('no more than 50 particles allowed in simulation.')
 
-        if not state_rx.match(initial_state_string):
+        if not state_string_rx.match(initial_state_string):
             raise Exception('badly formatted state string. Valid characters are "L", "R", and "."')
 
         initial_state = self.generate_particle_state_vector(speed, initial_state_string)
@@ -111,27 +112,10 @@ class Animation(object):
         return result
 
 
-
 def main(args):
     speed = int(args['<speed>'])
     initial_state_string = args['<initial_state>']
-
     particle_animation = Animation()
-    '''
-    sv = particle_animation.particle_(speed, initial_state_string)
-    print(sv)
-    chamber_size = len(initial_state_string)
-    print(particle_animation.readout(sv, chamber_size))
-    sv = particle_animation.update(sv)
-    print(particle_animation.readout(sv, chamber_size))
-    sv = particle_animation.update(sv)
-    print(particle_animation.readout(sv, chamber_size))
-    sv = particle_animation.update(sv)
-    print(particle_animation.readout(sv, chamber_size))
-
-    print(particle_animation.particles_have_all_exited_chamber(sv, chamber_size))
-    '''
-
     print('\n'.join(particle_animation.animate(speed, initial_state_string)))
     
 
