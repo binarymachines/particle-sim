@@ -119,7 +119,7 @@ def main(args):
     particle_animation = Animation()
     '''
     sv = particle_animation.particle_(speed, initial_state_string)
-    #print(sv)
+    print(sv)
     chamber_size = len(initial_state_string)
     print(particle_animation.readout(sv, chamber_size))
     sv = particle_animation.update(sv)
